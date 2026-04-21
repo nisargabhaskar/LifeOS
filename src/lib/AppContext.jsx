@@ -1,34 +1,18 @@
 import { createContext, useContext, useEffect, useState } from 'react'
-import { supabase } from '../lib/supabase'
 
 const AppContext = createContext(null)
 
 export function AppProvider({ children }) {
-  const [user, setUser] = useState(null)
   const [settings, setSettings] = useState({
     theme: 'light',
     persona: 'student',
-    ai_model: 'ollama',
     ollama_model: 'llama3.1',
-    ai_override: null,
   })
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null)
-      setLoading(false)
-    })
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, session) => {
-      setUser(session?.user ?? null)
-    })
-    return () => subscription.unsubscribe()
-  }, [])
 
   useEffect(() => {
     const saved = localStorage.getItem('lifeos_settings')
     if (saved) {
-      try { setSettings(JSON.parse(saved)) } catch {}
+      try { setSettings(prev => ({ ...prev, ...JSON.parse(saved) })) } catch {}
     }
   }, [])
 
@@ -46,7 +30,7 @@ export function AppProvider({ children }) {
   }
 
   return (
-    <AppContext.Provider value={{ user, settings, updateSettings, toggleTheme, loading }}>
+    <AppContext.Provider value={{ settings, updateSettings, toggleTheme }}>
       {children}
     </AppContext.Provider>
   )

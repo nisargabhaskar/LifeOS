@@ -4,7 +4,6 @@ import { useApp } from '../../lib/AppContext'
 import { classifyCapture, generateActionPlan } from '../../lib/ai'
 import { createEvent } from '../../lib/calendar'
 import { supabase } from '../../lib/supabase'
-import ModelPicker from '../ui/ModelPicker'
 import { format } from 'date-fns'
 import './Capture.css'
 
@@ -135,11 +134,11 @@ export default function Capture() {
     setItems(prev => [...prev, tempItem])
 
     try {
-      const activeSettings = { ...settings, ai_override: model === 'auto' ? null : model }
-      const classification  = await classifyCapture(text, activeSettings)
+      const settings = settings
+      const classification  = await classifyCapture(text, settings)
       let actionPlan = null
       if (classification.type === 'project') {
-        actionPlan = await generateActionPlan(classification.title, classification.summary, activeSettings)
+        actionPlan = await generateActionPlan(classification.title, classification.summary, settings)
       }
 
       // Build the capture object — no user_id
@@ -397,10 +396,6 @@ export default function Capture() {
           ))}
         </div>
         <div ref={bottomRef} />
-      </div>
-
-      <div className="capture-bar-row">
-        <ModelPicker value={model} onChange={setModel} taskType="classify" />
       </div>
       <div className="capture-input-bar">
         <textarea

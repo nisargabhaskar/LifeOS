@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import { Plus, X } from 'lucide-react'
 import { supabase } from '../../lib/supabase'
 import { format, differenceInDays, isPast } from 'date-fns'
-import ModelPicker from '../ui/ModelPicker'
 import './Academic.css'
 
 const PROGRESS_STEPS = [
@@ -184,10 +183,6 @@ export default function Academic() {
           ))}
         </div>
       )}
-
-      <div className="section-footer">
-        <ModelPicker value={model} onChange={setModel} taskType="classify" />
-      </div>
     </div>
   )
 }

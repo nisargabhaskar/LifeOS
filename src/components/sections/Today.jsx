@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { format } from 'date-fns'
 import { Sparkles, CheckCircle2, Circle, Clock, Calendar, BookOpen, AlertCircle, Plus } from 'lucide-react'
 import { useApp } from '../../lib/AppContext'
-import ModelPicker from '../ui/ModelPicker'
 import { generateDayPlan } from '../../lib/ai'
 import { getTodayEvents, isConnected } from '../../lib/calendar'
 import { supabase } from '../../lib/supabase'
@@ -18,12 +17,12 @@ const TYPE_COLORS = {
 
 export default function Today() {
   const { settings } = useApp()
+  const { settings, plan, setPlan } = useApp()
   const [plan, setPlan] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [checked, setChecked] = useState({})
   const [scheduleApproval, setScheduleApproval] = useState(null)
-  const [model, setModel] = useState('auto')
 
   const today = new Date()
   const greeting = getGreeting()
@@ -46,29 +45,13 @@ export default function Today() {
         academics: academicRes.data || [],
         reminders: remindersRes.data || [],
         persona: settings.persona,
-        settings: { ...settings, ai_override: model === 'auto' ? null : model }
+        settings: settings
       })
       setPlan(generated)
     } catch (e) {
       setError(e.message)
-      setPlan(getFallbackPlan())
     } finally {
       setLoading(false)
-    }
-  }
-
-  function getFallbackPlan() {
-    return {
-      greeting: `${greeting}!`,
-      summary: "Here's a suggested flow for your day. Connect your calendar and AI model for a personalised plan.",
-      flow: [
-        { time: '9:00 AM', title: 'Morning review', type: 'focus', duration: '15 min', note: 'Check your tasks and priorities' },
-        { time: '9:30 AM', title: 'Deep work block', type: 'focus', duration: '90 min', note: 'Tackle your hardest task first' },
-        { time: '11:00 AM', title: 'Short break', type: 'break', duration: '15 min' },
-        { time: '11:15 AM', title: 'Emails and messages', type: 'task', duration: '30 min' },
-        { time: '2:00 PM', title: 'Study / reading block', type: 'academic', duration: '60 min' },
-        { time: '5:00 PM', title: 'Evening wrap-up', type: 'focus', duration: '15 min', note: 'Write down what you finished and what\'s next' },
-      ]
     }
   }
 
@@ -163,9 +146,6 @@ export default function Today() {
           )}
         </>
       )}
-    <div className="section-footer">
-        <ModelPicker value={model} onChange={setModel} taskType="plan" />
-      </div>
     </div>
   )
 }
