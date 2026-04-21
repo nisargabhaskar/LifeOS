@@ -40,3 +40,31 @@
   .reminder-card { flex-wrap: wrap; }
   .reminder-actions { margin-left: auto; }
 }
+
+.header-right { display: flex; align-items: center; gap: 10px; }
+
+.cal-indicator {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 11.5px; padding: 4px 9px;
+  border-radius: 99px; font-weight: 500;
+}
+.cal-indicator.connected {
+  background: var(--accent-light); color: var(--accent-text);
+}
+.cal-indicator.disconnected {
+  background: var(--bg-subtle); color: var(--text-tertiary);
+}
+
+.status-banner {
+  display: flex; align-items: center; gap: 8px;
+  padding: 9px 13px; border-radius: var(--radius-sm);
+  font-size: 13px; margin-bottom: 14px;
+}
+.status-added  { background: var(--accent-light); color: var(--accent-text); }
+.status-error  { background: var(--amber-light);  color: var(--amber); }
+.status-no-cal { background: var(--bg-subtle);    color: var(--text-secondary); }
+
+.cal-hint {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 12px; color: var(--text-tertiary); line-height: 1.4;
+}
