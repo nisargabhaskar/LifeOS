@@ -1,0 +1,34 @@
+.reminders { max-width: 680px; }
+.reminder-list { display: flex; flex-direction: column; gap: 8px; }
+.reminder-card {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 13px 15px; background: var(--bg-surface);
+  border: 1px solid var(--border); border-radius: var(--radius-md);
+  border-left: 3px solid var(--border);
+  transition: all var(--t);
+}
+.urgency-overdue { border-left-color: var(--red); }
+.urgency-today   { border-left-color: var(--amber); }
+.urgency-upcoming{ border-left-color: var(--accent); }
+
+.bell-icon { flex-shrink: 0; margin-top: 2px; }
+.bell-overdue { color: var(--red); }
+.bell-today   { color: var(--amber); }
+.bell-upcoming{ color: var(--accent); }
+
+.reminder-body { flex: 1; min-width: 0; }
+.reminder-text { font-size: 13.5px; color: var(--text-primary); font-weight: 500; }
+.reminder-time { font-size: 12px; color: var(--text-tertiary); margin-top: 2px; }
+.time-overdue { color: var(--red); }
+.time-today   { color: var(--amber); }
+
+.reminder-actions { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+.done-btn { color: var(--text-tertiary); padding: 3px; border-radius: 4px; transition: all var(--t); }
+.done-btn:hover { color: var(--accent); }
+
+.done-card { opacity: 0.5; border-left-color: var(--border) !important; }
+
+.nw-field { display: flex; flex-direction: column; gap: 5px; }
+.nw-field label { font-size: 12.5px; color: var(--text-secondary); }
+.nw-field input { padding: 9px 12px; border: 1px solid var(--border-strong); border-radius: var(--radius-sm); background: var(--bg-base); color: var(--text-primary); font-size: 13.5px; }
+.nw-field input:focus { outline: none; border-color: var(--accent); }

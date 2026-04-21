@@ -1,0 +1,75 @@
+.academic { max-width: 680px; }
+.section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+.section-header h2 { font-family: var(--font-serif); font-size: 22px; }
+.add-btn {
+  display: flex; align-items: center; gap: 5px;
+  padding: 7px 12px; border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md); font-size: 13px;
+  color: var(--text-secondary); background: var(--bg-surface);
+  transition: all var(--t);
+}
+.add-btn:hover { background: var(--bg-subtle); color: var(--text-primary); }
+
+.add-form {
+  background: var(--bg-surface); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 16px; margin-bottom: 20px;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.add-form input, .add-form textarea, .add-form select {
+  padding: 9px 12px; border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm); background: var(--bg-base);
+  color: var(--text-primary); font-size: 13.5px; width: 100%;
+  transition: border-color var(--t);
+}
+.add-form input:focus, .add-form textarea:focus { outline: none; border-color: var(--accent); }
+.form-row { display: flex; flex-direction: column; gap: 6px; }
+.form-row label { font-size: 12.5px; color: var(--text-secondary); }
+.form-actions { display: flex; gap: 8px; justify-content: flex-end; }
+.cancel-btn { padding: 7px 14px; border: 1px solid var(--border-strong); border-radius: var(--radius-sm); font-size: 13px; color: var(--text-secondary); background: transparent; transition: all var(--t); }
+.cancel-btn:hover { background: var(--bg-subtle); }
+.save-btn { padding: 7px 16px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 500; background: var(--accent); color: white; transition: opacity var(--t); }
+.save-btn:hover { opacity: 0.85; }
+.save-btn:disabled { opacity: 0.5; }
+
+.acad-list { display: flex; flex-direction: column; gap: 10px; }
+.acad-card {
+  background: var(--bg-surface); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 14px 16px;
+  border-left: 3px solid var(--border);
+  transition: all var(--t);
+}
+.urgency-overdue { border-left-color: var(--red); }
+.urgency-urgent  { border-left-color: var(--amber); }
+.urgency-soon    { border-left-color: var(--blue); }
+.urgency-ok      { border-left-color: var(--accent); }
+
+.acad-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 12px; }
+.acad-name { font-size: 14px; font-weight: 500; color: var(--text-primary); }
+.acad-subject { font-size: 12px; color: var(--text-tertiary); margin-top: 2px; }
+.acad-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+
+.due-badge { font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: 99px; }
+.due-overdue { background: var(--red-light); color: var(--red); }
+.due-urgent  { background: var(--amber-light); color: var(--amber); }
+.due-soon    { background: var(--blue-light); color: var(--blue); }
+.due-ok      { background: var(--accent-light); color: var(--accent-text); }
+
+.icon-btn { color: var(--text-tertiary); padding: 3px; border-radius: 4px; transition: all var(--t); }
+.icon-btn:hover { color: var(--text-primary); background: var(--bg-subtle); }
+
+.acad-progress { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.prog-track { flex: 1; height: 5px; background: var(--bg-subtle); border-radius: 99px; overflow: hidden; }
+.prog-fill { height: 100%; background: var(--accent); border-radius: 99px; transition: width 0.3s ease; }
+.prog-controls { display: flex; align-items: center; gap: 4px; }
+.prog-controls button { color: var(--text-secondary); padding: 2px; transition: color var(--t); }
+.prog-controls button:hover { color: var(--text-primary); }
+.prog-controls span { font-size: 12px; color: var(--text-secondary); min-width: 32px; text-align: center; }
+
+.acad-notes { font-size: 12.5px; color: var(--text-secondary); line-height: 1.5; }
+
+.done-section { margin-top: 24px; }
+.done-label { font-size: 12px; color: var(--text-tertiary); font-weight: 500; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+.done-card { opacity: 0.5; border-left-color: var(--border) !important; }
+.done-name { text-decoration: line-through; color: var(--text-tertiary) !important; }
+
+.empty-state { padding: 40px; text-align: center; color: var(--text-tertiary); font-size: 13.5px; }
