@@ -1,29 +1,71 @@
-.academic { max-width: 680px; }
+.academic { width: 100%; max-width: 720px; }
+
 .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
-.section-header h2 { font-family: var(--font-serif); font-size: 22px; }
+.section-header h2 { font-family: var(--font-serif); font-size: clamp(18px, 3vw, 24px); }
+
 .add-btn {
   display: flex; align-items: center; gap: 5px;
   padding: 7px 12px; border: 1px solid var(--border-strong);
   border-radius: var(--radius-md); font-size: 13px;
   color: var(--text-secondary); background: var(--bg-surface);
-  transition: all var(--t);
+  transition: all var(--t); white-space: nowrap;
 }
 .add-btn:hover { background: var(--bg-subtle); color: var(--text-primary); }
+
+.error-banner {
+  padding: 10px 14px; background: var(--red-light); color: var(--red);
+  border-radius: var(--radius-sm); font-size: 13px; margin-bottom: 14px;
+}
 
 .add-form {
   background: var(--bg-surface); border: 1px solid var(--border);
   border-radius: var(--radius-lg); padding: 16px; margin-bottom: 20px;
   display: flex; flex-direction: column; gap: 10px;
 }
-.add-form input, .add-form textarea, .add-form select {
+.add-form input, .add-form textarea {
   padding: 9px 12px; border: 1px solid var(--border-strong);
   border-radius: var(--radius-sm); background: var(--bg-base);
   color: var(--text-primary); font-size: 13.5px; width: 100%;
   transition: border-color var(--t);
 }
 .add-form input:focus, .add-form textarea:focus { outline: none; border-color: var(--accent); }
-.form-row { display: flex; flex-direction: column; gap: 6px; }
-.form-row label { font-size: 12.5px; color: var(--text-secondary); }
+.add-form textarea { resize: vertical; min-height: 60px; font-family: var(--font-sans); }
+
+.form-two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+@media (max-width: 480px) { .form-two-col { grid-template-columns: 1fr; } }
+
+.progress-pick-label { font-size: 12.5px; color: var(--text-secondary); }
+
+/* Progress step buttons */
+.progress-steps {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+}
+@media (max-width: 500px) {
+  .progress-steps { grid-template-columns: repeat(3, 1fr); }
+}
+
+.prog-step {
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  padding: 8px 4px; border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm); cursor: pointer;
+  transition: all var(--t); background: var(--bg-base);
+}
+.prog-step:hover { border-color: var(--accent); background: var(--accent-light); }
+.prog-step.active { border-color: var(--accent); background: var(--accent-light); }
+.prog-step.passed { border-color: var(--accent); opacity: 0.5; }
+.prog-step-pct { font-size: 13px; font-weight: 500; color: var(--text-primary); }
+.prog-step.active .prog-step-pct { color: var(--accent-text); }
+.prog-step-label { font-size: 10px; color: var(--text-tertiary); text-align: center; line-height: 1.2; }
+.prog-step.active .prog-step-label { color: var(--accent-text); }
+
+/* Compact step buttons on cards */
+.progress-steps.compact { margin-top: 8px; }
+.progress-steps.compact .prog-step { padding: 5px 2px; }
+.progress-steps.compact .prog-step-pct { font-size: 11px; }
+.progress-steps.compact .prog-step-label { font-size: 9px; }
+
 .form-actions { display: flex; gap: 8px; justify-content: flex-end; }
 .cancel-btn { padding: 7px 14px; border: 1px solid var(--border-strong); border-radius: var(--radius-sm); font-size: 13px; color: var(--text-secondary); background: transparent; transition: all var(--t); }
 .cancel-btn:hover { background: var(--bg-subtle); }
@@ -32,44 +74,50 @@
 .save-btn:disabled { opacity: 0.5; }
 
 .acad-list { display: flex; flex-direction: column; gap: 10px; }
+
 .acad-card {
   background: var(--bg-surface); border: 1px solid var(--border);
   border-radius: var(--radius-lg); padding: 14px 16px;
   border-left: 3px solid var(--border);
-  transition: all var(--t);
 }
 .urgency-overdue { border-left-color: var(--red); }
 .urgency-urgent  { border-left-color: var(--amber); }
 .urgency-soon    { border-left-color: var(--blue); }
 .urgency-ok      { border-left-color: var(--accent); }
+.urgency-none    { border-left-color: var(--border); }
 
-.acad-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 12px; }
-.acad-name { font-size: 14px; font-weight: 500; color: var(--text-primary); }
+.acad-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
+.acad-info { flex: 1; min-width: 0; }
+.acad-name { font-size: 14px; font-weight: 500; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .acad-subject { font-size: 12px; color: var(--text-tertiary); margin-top: 2px; }
 .acad-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
 
-.due-badge { font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: 99px; }
+.due-badge { font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: 99px; white-space: nowrap; }
 .due-overdue { background: var(--red-light); color: var(--red); }
 .due-urgent  { background: var(--amber-light); color: var(--amber); }
 .due-soon    { background: var(--blue-light); color: var(--blue); }
 .due-ok      { background: var(--accent-light); color: var(--accent-text); }
+.due-none    { background: var(--bg-subtle); color: var(--text-tertiary); }
 
 .icon-btn { color: var(--text-tertiary); padding: 3px; border-radius: 4px; transition: all var(--t); }
 .icon-btn:hover { color: var(--text-primary); background: var(--bg-subtle); }
 
-.acad-progress { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-.prog-track { flex: 1; height: 5px; background: var(--bg-subtle); border-radius: 99px; overflow: hidden; }
-.prog-fill { height: 100%; background: var(--accent); border-radius: 99px; transition: width 0.3s ease; }
-.prog-controls { display: flex; align-items: center; gap: 4px; }
-.prog-controls button { color: var(--text-secondary); padding: 2px; transition: color var(--t); }
-.prog-controls button:hover { color: var(--text-primary); }
-.prog-controls span { font-size: 12px; color: var(--text-secondary); min-width: 32px; text-align: center; }
+.prog-bar-visual { height: 4px; background: var(--bg-subtle); border-radius: 99px; overflow: hidden; margin-bottom: 6px; }
+.prog-bar-fill { height: 100%; background: var(--accent); border-radius: 99px; transition: width 0.35s ease; }
 
-.acad-notes { font-size: 12.5px; color: var(--text-secondary); line-height: 1.5; }
+.acad-notes { font-size: 12.5px; color: var(--text-secondary); margin-top: 8px; line-height: 1.5; }
 
 .done-section { margin-top: 24px; }
-.done-label { font-size: 12px; color: var(--text-tertiary); font-weight: 500; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em; }
-.done-card { opacity: 0.5; border-left-color: var(--border) !important; }
-.done-name { text-decoration: line-through; color: var(--text-tertiary) !important; }
+.done-label { font-size: 11.5px; color: var(--text-tertiary); font-weight: 500; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+.done-card { opacity: 0.45; border-left-color: var(--border) !important; }
+.done-name { text-decoration: line-through; color: var(--text-tertiary) !important; font-weight: 400 !important; }
 
 .empty-state { padding: 40px; text-align: center; color: var(--text-tertiary); font-size: 13.5px; }
+
+.section-footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}

@@ -32,10 +32,10 @@ export default function Capture() {
 
     const { data: { user } } = await supabase.auth.getUser()
 
-    if (!user) {
-      alert('You must be logged in')
-      return
-    }
+    // if (!user) {
+    //   alert('You must be logged in')
+    //   return
+    // }
 
 
     const text = input.trim()

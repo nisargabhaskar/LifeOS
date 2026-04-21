@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { format } from 'date-fns'
 import { Sparkles, CheckCircle2, Circle, Clock, Calendar, BookOpen, AlertCircle, Plus } from 'lucide-react'
 import { useApp } from '../../lib/AppContext'
+import ModelPicker from '../ui/ModelPicker'
 import { generateDayPlan } from '../../lib/ai'
 import { getTodayEvents, isConnected } from '../../lib/calendar'
 import { supabase } from '../../lib/supabase'
@@ -22,6 +23,7 @@ export default function Today() {
   const [error, setError] = useState(null)
   const [checked, setChecked] = useState({})
   const [scheduleApproval, setScheduleApproval] = useState(null)
+  const [model, setModel] = useState('auto')
 
   const today = new Date()
   const greeting = getGreeting()
@@ -44,7 +46,7 @@ export default function Today() {
         academics: academicRes.data || [],
         reminders: remindersRes.data || [],
         persona: settings.persona,
-        settings
+        settings: { ...settings, ai_override: model === 'auto' ? null : model }
       })
       setPlan(generated)
     } catch (e) {
@@ -161,6 +163,9 @@ export default function Today() {
           )}
         </>
       )}
+    <div className="section-footer">
+        <ModelPicker value={model} onChange={setModel} taskType="plan" />
+      </div>
     </div>
   )
 }

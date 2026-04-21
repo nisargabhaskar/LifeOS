@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Plus, X, TrendingUp, TrendingDown, DollarSign } from 'lucide-react'
 import { supabase } from '../../lib/supabase'
 import { format, startOfMonth, endOfMonth } from 'date-fns'
+import ModelPicker from '../ui/ModelPicker'
 import './Finance.css'
 
 const CATEGORIES = {
@@ -15,7 +16,8 @@ export default function Finance() {
   const [form, setForm] = useState({ type: 'expense', amount: '', category: 'Food', note: '', date: format(new Date(), 'yyyy-MM-dd') })
   const [saving, setSaving] = useState(false)
   const [netWorth, setNetWorth] = useState({ assets: '', liabilities: '' })
-  const [tab, setTab] = useState('log') // 'log' | 'networth'
+  const [tab, setTab] = useState('log')
+  const [model, setModel] = useState('auto')
 
   useEffect(() => { load() }, [])
 
@@ -161,6 +163,9 @@ export default function Finance() {
           </div>
         </div>
       )}
+      <div className="section-footer">
+        <ModelPicker value={model} onChange={setModel} taskType="finance" />
+      </div>
     </div>
   )
 }

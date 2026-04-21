@@ -229,3 +229,12 @@
 }
 .send-btn:hover { opacity: 0.85; transform: scale(1.05); }
 .send-btn:disabled { opacity: 0.35; transform: none; }
+
+/* Responsive */
+.capture-wrap { width: 100%; }
+.capture-bar-row { display: flex; justify-content: flex-end; padding: 6px 0 0; }
+.user-bubble { max-width: min(80%, 480px); }
+@media (max-width: 480px) {
+  .capture-wrap { height: calc(100dvh - var(--topbar-height) - var(--mobile-bar-height) - 16px); }
+  .card-header { flex-wrap: wrap; }
+}

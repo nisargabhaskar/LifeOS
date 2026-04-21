@@ -69,3 +69,13 @@
 .nw-value { font-family: var(--font-serif); font-size: 36px; }
 .nw-result.positive .nw-value { color: var(--accent-text); }
 .nw-result.negative .nw-value { color: var(--red); }
+
+/* Responsive */
+.finance { width: 100%; max-width: 720px; }
+.section-footer { display: flex; justify-content: flex-end; margin-top: 20px; padding-top: 12px; border-top: 1px solid var(--border); }
+@media (max-width: 520px) {
+  .fin-summary { grid-template-columns: 1fr 1fr; }
+  .fin-summary > div:last-child { grid-column: 1 / -1; }
+  .nw-inputs { grid-template-columns: 1fr; }
+  .nw-value { font-size: 28px; }
+}

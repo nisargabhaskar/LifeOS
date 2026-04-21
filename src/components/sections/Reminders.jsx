@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Plus, X, Bell, CheckCircle } from 'lucide-react'
 import { supabase } from '../../lib/supabase'
+import ModelPicker from '../ui/ModelPicker'
 import { format, isPast, isToday, isTomorrow } from 'date-fns'
 import './Reminders.css'
 
@@ -9,6 +10,7 @@ export default function Reminders() {
   const [adding, setAdding] = useState(false)
   const [form, setForm] = useState({ text: '', remind_at: '' })
   const [saving, setSaving] = useState(false)
+  const [model, setModel] = useState('auto')
 
   useEffect(() => { load() }, [])
 
@@ -112,6 +114,9 @@ export default function Reminders() {
           ))}
         </div>
       )}
+      <div className="section-footer">
+        <ModelPicker value={model} onChange={setModel} taskType="schedule" />
+      </div>
     </div>
   )
 }

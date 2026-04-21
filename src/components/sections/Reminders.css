@@ -32,3 +32,11 @@
 .nw-field label { font-size: 12.5px; color: var(--text-secondary); }
 .nw-field input { padding: 9px 12px; border: 1px solid var(--border-strong); border-radius: var(--radius-sm); background: var(--bg-base); color: var(--text-primary); font-size: 13.5px; }
 .nw-field input:focus { outline: none; border-color: var(--accent); }
+
+/* Responsive */
+.reminders { width: 100%; max-width: 720px; }
+.section-footer { display: flex; justify-content: flex-end; margin-top: 20px; padding-top: 12px; border-top: 1px solid var(--border); }
+@media (max-width: 480px) {
+  .reminder-card { flex-wrap: wrap; }
+  .reminder-actions { margin-left: auto; }
+}

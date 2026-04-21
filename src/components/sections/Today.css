@@ -106,3 +106,14 @@
   border-radius: var(--radius-md);
   font-size: 13px;
 }
+
+/* Responsive */
+.today { width: 100%; max-width: 720px; }
+.section-footer { display: flex; justify-content: flex-end; margin-top: 20px; padding-top: 12px; border-top: 1px solid var(--border); }
+.flow-top { flex-wrap: wrap; }
+@media (max-width: 480px) {
+  .today-day { font-size: 22px; }
+  .flow-card { padding: 10px 12px; }
+  .flow-title { font-size: 13px; }
+  .flow-meta { flex-wrap: wrap; gap: 6px; }
+}

@@ -113,7 +113,7 @@
 .content {
   flex: 1;
   overflow-y: auto;
-  padding: 24px;
+  padding: clamp(12px, 3vw, 28px);
 }
 
 /* Mobile bottom bar */

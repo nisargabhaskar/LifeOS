@@ -3,7 +3,79 @@ import { createClient } from '@supabase/supabase-js'
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY
 
-export const supabase = createClient(supabaseUrl, supabaseKey)
+export const isSupabaseConfigured = !!(supabaseUrl && supabaseKey &&
+  supabaseUrl !== 'your_supabase_project_url' &&
+  supabaseKey !== 'your_supabase_anon_key')
+
+// LocalStorage fallback store when Supabase is not configured
+const localStore = {
+  _data: JSON.parse(localStorage.getItem('lifeos_local') || '{}'),
+  _save() { localStorage.setItem('lifeos_local', JSON.stringify(this._data)) },
+  from(table) {
+    const store = this
+    if (!store._data[table]) store._data[table] = []
+    return {
+      _table: table,
+      _filters: [],
+      _orderCol: null,
+      _orderAsc: true,
+      _limitN: null,
+      select() { return this },
+      eq(col, val) { this._filters.push({ col, val }); return this },
+      gte() { return this },
+      lte() { return this },
+      lt() { return this },
+      order(col, { ascending = true } = {}) { this._orderCol = col; this._orderAsc = ascending; return this },
+      limit(n) { this._limitN = n; return this },
+      single() { return this },
+      async then(resolve) {
+        let rows = [...(store._data[this._table] || [])]
+        for (const f of this._filters) rows = rows.filter(r => r[f.col] === f.val)
+        if (this._orderCol) {
+          rows.sort((a, b) => {
+            const av = a[this._orderCol], bv = b[this._orderCol]
+            return this._orderAsc ? (av > bv ? 1 : -1) : (av < bv ? 1 : -1)
+          })
+        }
+        if (this._limitN) rows = rows.slice(0, this._limitN)
+        resolve({ data: rows, error: null })
+      },
+      async insert(items) {
+        const inserted = items.map(item => ({ ...item, id: item.id || crypto.randomUUID(), created_at: new Date().toISOString() }))
+        store._data[this._table] = [...(store._data[this._table] || []), ...inserted]
+        store._save()
+        return { data: inserted, error: null }
+      },
+      async update(patch) {
+        const tbl = store._data[this._table] || []
+        store._data[this._table] = tbl.map(r => {
+          for (const f of this._filters) if (r[f.col] !== f.val) return r
+          return { ...r, ...patch }
+        })
+        store._save()
+        return { data: null, error: null }
+      },
+      async delete() {
+        const tbl = store._data[this._table] || []
+        store._data[this._table] = tbl.filter(r => {
+          for (const f of this._filters) if (r[f.col] === f.val) return false
+          return true
+        })
+        store._save()
+        return { data: null, error: null }
+      }
+    }
+  }
+}
+
+export const supabase = isSupabaseConfigured
+  ? createClient(supabaseUrl, supabaseKey, {
+      auth: { persistSession: true, autoRefreshToken: true },
+      global: { headers: { 'apikey': supabaseKey } }
+    })
+  : localStore
+
+
 
 /*
   SUPABASE SCHEMA — run this SQL in your Supabase SQL editor:
@@ -105,4 +177,19 @@ export const supabase = createClient(supabaseUrl, supabaseKey)
   create policy "own data" on reminders for all using (auth.uid() = user_id);
   create policy "own data" on recurring_actions for all using (auth.uid() = user_id);
   create policy "own data" on settings for all using (auth.uid() = user_id);
-*/
+
+create policy "allow_all" on captures for all to anon using (true) with check (true);
+-- repeat for each table
+create policy "allow_all" on tasks for all to anon using (true) with check (true);
+-- repeat for each table
+create policy "allow_all" on academics for all to anon using (true) with check (true);
+-- repeat for each table
+create policy "allow_all" on finance for all to anon using (true) with check (true);
+-- repeat for each table
+create policy "allow_all" on reminders for all to anon using (true) with check (true);
+-- repeat for each table
+create policy "allow_all" on recurring_actions for all to anon using (true) with check (true);
+-- repeat for each table
+create policy "allow_all" on settings for all to anon using (true) with check (true);
+-- repeat for each table
+  */
