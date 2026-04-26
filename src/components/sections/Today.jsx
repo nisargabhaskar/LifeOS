@@ -17,7 +17,6 @@ const TYPE_COLORS = {
 
 export default function Today() {
   const { settings } = useApp()
-  const { settings, plan, setPlan } = useApp()
   const [plan, setPlan] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
