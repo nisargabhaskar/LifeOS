@@ -54,7 +54,7 @@ Return exactly this shape:
   }
 }
 
-export async function generateDayPlan({ events, tasks, academics, reminders, persona, settings }) {
+export async function generateDayPlan({ events, tasks, academics, reminders, captures, persona, settings }) {
   const systemPrompt = `You are a personal life assistant for a ${persona || 'student'}. Given the user's day data, create a realistic day plan. Respond with ONLY valid JSON.
 
 Return:
@@ -80,6 +80,7 @@ Calendar events: ${JSON.stringify(events)}
 Open tasks: ${JSON.stringify(tasks)}
 Academic deadlines: ${JSON.stringify(academics)}
 Reminders: ${JSON.stringify(reminders)}
+Recent captures: ${JSON.stringify(captures)}
 Current time: ${new Date().toLocaleTimeString()}`
 
   const raw = await callOllama(prompt, systemPrompt, settings.ollama_model || 'llama3.1')

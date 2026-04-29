@@ -31,7 +31,8 @@ Open http://localhost:3000
 ### Supabase (database + sync)
 1. Go to https://supabase.com and create a free project
 2. In the SQL editor, paste and run the entire schema from `src/lib/supabase.js`
-3. Copy your project URL and anon key into `.env`
+3. Also run the migration from `day_plans_migration.sql` to add persistent day plans
+4. Copy your project URL and anon key into `.env`
 
 ### Ollama (local AI — free, no key needed)
 ```bash

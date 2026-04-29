@@ -24,29 +24,65 @@ export default function Today() {
   const [scheduleApproval, setScheduleApproval] = useState(null)
 
   const today = new Date()
+  const todayStr = format(today, 'yyyy-MM-dd')
   const greeting = getGreeting()
 
   useEffect(() => { loadPlan() }, [])
 
-  async function loadPlan() {
+  async function loadPlan(forceRegenerate = false) {
     setLoading(true)
     setError(null)
     try {
-      const [events, tasksRes, academicRes, remindersRes] = await Promise.all([
-        isConnected() ? getTodayEvents() : Promise.resolve([]),
-        supabase.from('tasks').select('*').eq('done', false).order('created_at'),
-        supabase.from('academics').select('*').lt('progress', 100).order('due_at'),
-        supabase.from('reminders').select('*').eq('done', false).order('remind_at'),
-      ])
-      const generated = await generateDayPlan({
-        events,
-        tasks: tasksRes.data || [],
-        academics: academicRes.data || [],
-        reminders: remindersRes.data || [],
-        persona: settings.persona,
-        settings: settings
-      })
-      setPlan(generated)
+      // First check if we have a saved plan for today
+      const { data: existingPlan, error: planError } = await supabase
+        .from('day_plans')
+        .select('plan_data')
+        .eq('date', todayStr)
+        .single()
+
+      if (existingPlan && !planError && !forceRegenerate) {
+        // Load existing plan
+        setPlan(existingPlan.plan_data)
+      } else {
+        // Generate new plan
+        const [events, tasksRes, academicRes, remindersRes, capturesRes] = await Promise.all([
+          isConnected() ? getTodayEvents() : Promise.resolve([]),
+          supabase.from('tasks').select('*').eq('done', false).order('created_at'),
+          supabase.from('academics').select('*').lt('progress', 100).order('due_at'),
+          supabase.from('reminders').select('*').eq('done', false).order('remind_at'),
+          // Get recent captures from the last 7 days
+          supabase.from('captures').select('*')
+            .gte('created_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString())
+            .order('created_at', { ascending: false })
+            .limit(20)
+        ])
+
+        const generated = await generateDayPlan({
+          events,
+          tasks: tasksRes.data || [],
+          academics: academicRes.data || [],
+          reminders: remindersRes.data || [],
+          captures: capturesRes.data || [],
+          persona: settings.persona,
+          settings: settings
+        })
+
+        // Save or update the plan
+        if (existingPlan && !planError) {
+          const { error: updateError } = await supabase.from('day_plans')
+            .update({ plan_data: generated, updated_at: new Date().toISOString() })
+            .eq('date', todayStr)
+          if (updateError) console.warn('Failed to update day plan:', updateError)
+        } else {
+          const { error: insertError } = await supabase.from('day_plans').insert([{
+            date: todayStr,
+            plan_data: generated
+          }])
+          if (insertError) console.warn('Failed to save day plan:', insertError)
+        }
+
+        setPlan(generated)
+      }
     } catch (e) {
       setError(e.message)
     } finally {
@@ -69,7 +105,7 @@ export default function Today() {
           <span className="today-day">{format(today, 'EEEE')}</span>
           <span className="today-full">{format(today, 'MMMM d, yyyy')}</span>
         </div>
-        <button className="refresh-btn" onClick={loadPlan} disabled={loading}>
+        <button className="refresh-btn" onClick={() => loadPlan(true)} disabled={loading}>
           <Sparkles size={14} />
           {loading ? 'Planning…' : 'Regenerate'}
         </button>

@@ -192,4 +192,24 @@ create policy "allow_all" on recurring_actions for all to anon using (true) with
 -- repeat for each table
 create policy "allow_all" on settings for all to anon using (true) with check (true);
 -- repeat for each table
+
+
+-- Create day_plans table for persistent Today plans
+CREATE TABLE IF NOT EXISTS day_plans (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  date DATE NOT NULL UNIQUE,
+  plan_data JSONB NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Create index on date for fast lookups
+CREATE INDEX IF NOT EXISTS idx_day_plans_date ON day_plans(date);
+
+-- Enable RLS (Row Level Security)
+ALTER TABLE day_plans ENABLE ROW LEVEL SECURITY;
+
+-- Allow all operations for authenticated users (adjust as needed for your auth setup)
+CREATE POLICY "Allow all operations for authenticated users" ON day_plans
+  FOR ALL USING (auth.role() = 'authenticated');
   */
